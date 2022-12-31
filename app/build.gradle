@@ -1,0 +1,31 @@
+plugins {
+    id 'cpp-application'
+    id 'cpp-unit-test'
+}
+
+application {
+    targetMachines.add(machines.macOS.x86_64)
+}
+
+tasks.withType(CppCompile).configureEach {
+    compilerArgs.add '-fPIC'
+    includes {
+        '/usr/local/include'
+    }
+
+    compilerArgs.addAll toolChain.map { toolChain ->
+        if (toolChain in [ Gcc, Clang ]) {
+            return ['-O2', '-fno-access-control']
+        } else if (toolChain in VisualCpp) {
+            return ['/Zi']
+        }
+        return []
+    }
+}
+
+tasks.withType(LinkExecutable).configureEach {
+    linkerArgs.add '-v'
+    linkerArgs.add '-lSDL2'
+    linkerArgs.add '-lSDL2main'
+}
+

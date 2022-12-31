@@ -1,0 +1,2 @@
+rootProject.name = 'sdl-cpp-starter-project'
+include('app')
