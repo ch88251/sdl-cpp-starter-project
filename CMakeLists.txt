@@ -4,14 +4,14 @@ project(sdl_cpp_starter)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(/usr/local/include)
-include_directories(app/src/main/cpp)
-include_directories(app/src/main/headers)
+include_directories(src/main/cpp)
+include_directories(src/main/headers)
 
 add_executable(sdl_cpp_starter
-        app/src/main/cpp/Game.cpp
-        app/src/main/cpp/Game.h
-        app/src/main/cpp/Main.cpp
-        app/src/main/headers/app.h)
+        src/main/cpp/Game.cpp
+        src/main/cpp/Game.h
+        src/main/cpp/Main.cpp
+        src/main/headers/app.h)
 
 target_link_directories(sdl_cpp_starter PRIVATE lib)
 target_link_libraries(sdl_cpp_starter PRIVATE SDL2 SDL2main)
