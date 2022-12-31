@@ -66,13 +66,13 @@ void Game::RunLoop() {
 void Game::ProcessInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event)) {
-    if (event.type == 'SDL_QUIT') {
+    if (event.type == 'QUIT') {
       mIsRunning = false;
     }
   }
 
   // Get a snapshot of the current state of the keyboard.
-  const Uint8* state = SDL_GetKeyboardState(NULL);
+  const Uint8* state = SDL_GetKeyboardState(nullptr);
   
   if (state[SDL_SCANCODE_ESCAPE]) {
     mIsRunning = false;
