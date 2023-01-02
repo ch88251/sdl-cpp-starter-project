@@ -1,0 +1,5 @@
+# ninja log v5
+1076	1165	1672552158190170170	sdl_cpp_starter	16839cffb75a7cef
+0	565	1672621854762581067	CMakeFiles/archery.dir/src/main/cpp/Main.cpp.o	433b80083c387e40
+0	930	1672621855126480730	CMakeFiles/archery.dir/src/main/cpp/Game.cpp.o	d6122bd86614a8d0
+931	989	1672621855187022233	archery	42779fda638edb1a

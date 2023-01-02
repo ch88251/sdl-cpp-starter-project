@@ -1,116 +1,139 @@
-#include <iostream>
 #include <SDL2/SDL.h>
+#include <string>
 
 #include "Game.h"
 
-const int thickness = 15;
-const float paddleH = 100.0f;
+Game::Game()
+        :mWindow(nullptr)
+        ,mRenderer(nullptr)
+        ,mTicksCount(0)
+        ,mIsRunning(true){}
 
-Game::Game() : mWindow(nullptr),
-               mRenderer(nullptr),
-               mTicksCount(0),
-               mIsRunning(true),
-               mPaddleDir(0) {
-  // Empty body
-}
-
-bool Game::Initialize() {
-  int sdlResult = SDL_Init(SDL_INIT_VIDEO);
-  if (sdlResult != 0) {
-    SDL_Log("Unable to i itialize SDL: %s", SDL_GetError());
-    return false;
-  }
-
-  // Create an SDL window
-  mWindow = SDL_CreateWindow(
-    "Game Window",
-    100,
-    100,
-    1024,
-    768,
-    0
-  );
-
-  if (!mWindow) {
-    SDL_Log("Failed to create window: %s", SDL_GetError());
-    return false;
-  }
-
-  mRenderer = SDL_CreateRenderer(
-    mWindow, // Window to create renderer for
-    -1,
-    SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
-  );
-
-  if (!mRenderer) {
-    SDL_Log("Failed to create renderer: %s", SDL_GetError());
-    return false;
-  }
-
-  mPaddlePos.x = 10.0f;
-  mPaddlePos.y = 768.0f/2.0f;
-  mBallPos.x = 1024.0f/2.0f;
-  mBallVel.x = -200.0f;
-  mBallVel.y = 235.0f;
-  return true;
-}
-
-void Game::RunLoop() {
-  while (mIsRunning) {
-    ProcessInput();
-    //UpdateGame();
-    //GenerateOutput();
-  }
-}
-
-void Game::ProcessInput() {
-  SDL_Event event;
-  while (SDL_PollEvent(&event)) {
-    if (event.type == 'QUIT') {
-      mIsRunning = false;
+bool Game::Initialize()
+{
+    // Initialize SDL
+    int sdlResult = SDL_Init(SDL_INIT_VIDEO);
+    if (sdlResult != 0)
+    {
+        SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+        return false;
     }
-  }
 
-  // Get a snapshot of the current state of the keyboard.
-  const Uint8* state = SDL_GetKeyboardState(nullptr);
-  
-  if (state[SDL_SCANCODE_ESCAPE]) {
-    mIsRunning = false;
-  }
+    // Create an SDL Window
+    const std::string windowTitle = "SDL Game Starter Project";
+    const int windowXCoord = 100;
+    const int windowYCoord = 100;
+    const int windowWidth = 1024;
+    const int windowHeight = 768;
+    const int windowFlags = 0;
+    
+    mWindow = SDL_CreateWindow(
+            "SDL Game Starter Project",
+            windowXCoord,
+            windowYCoord,
+            windowWidth,
+            windowHeight,
+            windowFlags
+    );
 
-  // Update paddle direction when up/down arrow key is pressed
-  if (state[SDL_SCANCODE_UP]) {
-    mPaddleDir -= 1;
-  }
-  if (state[SDL_SCANCODE_DOWN]) {
-    mPaddleDir += 1;
-  }
+    if (!mWindow)
+    {
+        SDL_Log("Failed to create window: %s", SDL_GetError());
+        return false;
+    }
 
+    //// Create SDL renderer
+    mRenderer = SDL_CreateRenderer(
+            mWindow, // Window to create renderer for
+            -1,		 // Usually -1
+            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+    );
+
+    if (!mRenderer)
+    {
+        SDL_Log("Failed to create renderer: %s", SDL_GetError());
+        return false;
+    }
+
+    return true;
 }
 
-void Game::UpdateGame() {
-  // Wait until 16ms has elapsed since last frame
-  while(!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16))
-    ;
-  
-  // Delta time is the difference in ticks from the last frame
-  // converted to seconds.
-  float deltaTime = (SDL_GetTicks() - mTicksCount / 1000.0f);
-
-  // Put a limit on the max delta time value
-  if (deltaTime > 0.05f) {
-    deltaTime = 0.05f;
-  }
-
-  // Update ticksCount for next frame
-  mTicksCount = SDL_GetTicks();
-
-  // Update paddle position based on direction
-  
+void Game::RunLoop()
+{
+    while (mIsRunning)
+    {
+        ProcessInput();
+        UpdateGame();
+        GenerateOutput();
+    }
 }
 
-void Game::Shutdown() {
-  SDL_DestroyRenderer(mRenderer);
-  SDL_DestroyWindow(mWindow);
-  SDL_Quit();
+void Game::ProcessInput()
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+            // If we get an SDL_QUIT event, end loop
+            case SDL_QUIT:
+                mIsRunning = false;
+                break;
+        }
+    }
+
+    // Get state of keyboard
+    const Uint8* state = SDL_GetKeyboardState(nullptr);
+    // If escape is pressed, also end loop
+    if (state[SDL_SCANCODE_ESCAPE])
+    {
+        mIsRunning = false;
+    }
+}
+
+void Game::UpdateGame()
+{
+    // Wait until 16ms has elapsed since last frame
+    while (!SDL_TICKS_PASSED(SDL_GetTicks(), mTicksCount + 16))
+        ;
+
+    // Delta time is the difference in ticks from last frame
+    // (converted to seconds)
+    float deltaTime = (SDL_GetTicks() - mTicksCount) / 1000.0f;
+
+    // Clamp maximum delta time value
+    if (deltaTime > 0.05f)
+    {
+        deltaTime = 0.05f;
+    }
+
+    // Update tick counts (for next frame)
+    mTicksCount = SDL_GetTicks();
+}
+
+void Game::GenerateOutput()
+{
+    // Set draw color to blue
+    SDL_SetRenderDrawColor(
+            mRenderer,
+            0,		// R
+            0,		// G
+            255,	// B
+            255		// A
+    );
+
+    // Clear back buffer
+    SDL_RenderClear(mRenderer);
+
+    SDL_SetRenderDrawColor(mRenderer, 255, 255, 255, 255);
+
+    // Swap front buffer and back buffer
+    SDL_RenderPresent(mRenderer);
+}
+
+void Game::Shutdown()
+{
+    SDL_DestroyRenderer(mRenderer);
+    SDL_DestroyWindow(mWindow);
+    SDL_Quit();
 }
