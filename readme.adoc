@@ -1,0 +1,25 @@
+= Starter Project For C++ Game Development with SDL2
+:sectnums:
+:sectnumlevels: 3
+
+== Project Setup
+The only dependency you will need to build and run this project is SDL2
+library. I'm using a Macbook, so if you using something else you will 
+need to find the information for your particular development environment.
+
+For mac users, you can just simply install SDL2 using brew:
+```
+brew install sdl2
+```
+
+== Building The Example Starter Project
+
+```
+git clone git@github.com:ch88251/sdl-cpp-starter-project.git
+cd sdl-cpp-starter-project
+mkdir build
+cd build
+cmake ..
+make
+```
+
