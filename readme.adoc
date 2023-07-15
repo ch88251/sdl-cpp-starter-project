@@ -4,7 +4,7 @@
 
 == Project Setup
 The only dependency you will need to build and run this project is SDL2
-library. I'm using a Macbook, so if you using something else you will 
+library. I'm using a Macbook, so if you are using something else you will 
 need to find the information for your particular development environment.
 
 For mac users, you can just simply install SDL2 using brew:
